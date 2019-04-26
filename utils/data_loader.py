@@ -29,7 +29,7 @@ def load_data_set(type,max_len,vocab_size,batch_size):
         NUM_WORDS=vocab_size # only use top 1000 words
            # word index offset
  
-        train_set,test_set = imdb.load_data(num_words=NUM_WORDS, index_from=INDEX_FROM)
+        train_set,test_set = imdb.load_data(path="imdb.pkl",num_words=NUM_WORDS, index_from=INDEX_FROM)
         x_train,y_train = train_set[0],train_set[1]
         x_test,y_test = test_set[0],test_set[1]
         word_to_id = imdb.get_word_index()
@@ -78,4 +78,4 @@ def load_data_set(type,max_len,vocab_size,batch_size):
  
         train_data = data_utils.TensorDataset(torch.from_numpy(x_train_pad).type(torch.LongTensor),torch.from_numpy(y_train).type(torch.LongTensor))
         train_loader = data_utils.DataLoader(train_data,batch_size=batch_size,drop_last=True)
-        return train_loader,train_set,test_set,x_test_pad,word_to_id
+        return train_loader,x_test_pad,y_test,word_to_id

@@ -46,7 +46,7 @@ class StructuredSelfAttention(torch.nn.Module):
         self.batch_size = batch_size       
         self.max_len = max_len
         self.lstm_hid_dim = lstm_hid_dim
-        self.hidden_state = self.init_hidden()
+        #self.h,self.c = self.init_hidden()
         self.r = r
         self.type = type
                  
@@ -94,12 +94,12 @@ class StructuredSelfAttention(torch.nn.Module):
        
         
     def init_hidden(self):
-        return (Variable(torch.zeros(1,self.batch_size,self.lstm_hid_dim)),Variable(torch.zeros(1,self.batch_size,self.lstm_hid_dim)))
+        return torch.randn(1,self.batch_size,self.lstm_hid_dim),torch.randn(1,self.batch_size,self.lstm_hid_dim)
        
         
     def forward(self,x):
-        embeddings = self.embeddings(x)       
-        outputs, self.hidden_state = self.lstm(embeddings.view(self.batch_size,self.max_len,-1),self.hidden_state)       
+        embeddings = self.embeddings(x)
+        outputs, (self.h,self.c) = self.lstm(embeddings.view(self.batch_size,self.max_len,-1))#,(self.h.cuda(),self.c.cuda()))       
         x = F.tanh(self.linear_first(outputs))       
         x = self.linear_second(x)       
         x = self.softmax(x,1)       
